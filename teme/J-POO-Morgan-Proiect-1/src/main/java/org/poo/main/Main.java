@@ -3,6 +3,7 @@ package org.poo.main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.poo.BankTeller;
 import org.poo.checker.Checker;
 import org.poo.checker.CheckerConstants;
 import org.poo.fileio.ObjectInput;
@@ -72,7 +73,7 @@ public final class Main {
         File file = new File(CheckerConstants.TESTS_PATH + filePath1);
         ObjectInput inputData = objectMapper.readValue(file, ObjectInput.class);
 
-        ArrayNode output = objectMapper.createArrayNode();
+        //ArrayNode output = objectMapper.createArrayNode();
 
         /*
          * TODO Implement your function here
@@ -92,6 +93,11 @@ public final class Main {
          * output.add(objectNode);
          *
          */
+
+        BankTeller bankTeller = new BankTeller();
+
+        bankTeller.startDay(inputData);
+        ArrayNode output = bankTeller.getOutput();
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);
