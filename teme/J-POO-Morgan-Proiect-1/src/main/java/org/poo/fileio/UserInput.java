@@ -2,7 +2,7 @@ package org.poo.fileio;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.poo.Account;
+import org.poo.AccountsSuite.Account;
 
 import java.util.List;
 
