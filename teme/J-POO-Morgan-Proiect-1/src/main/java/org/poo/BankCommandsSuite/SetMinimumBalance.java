@@ -36,12 +36,10 @@ public class SetMinimumBalance implements BankCommand {
         String iban = commandInput.getAccount();
         double amount = commandInput.getAmount();
 
-        // Find the account by IBAN and set the minimum balance
         for (User user : users) {
             for (Account account : user.getAccounts()) {
                 if (account.getIBAN().equals(iban)) {
                     if (amount >= 0) {
-                        // Set the minimum balance for the account
                         account.setMinimumBalance(amount);
                     }
                     return;

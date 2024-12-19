@@ -47,17 +47,14 @@ public class DeleteCard implements BankCommand {
             return;
         }
 
-        // Iterate through the user's accounts to find the card
         for (Account account : user.getAccounts()) {
             List<Card> updatedCards = new ArrayList<>();
             boolean cardDeleted = false;
 
-            // Check each card in the account
             for (Card card : account.getCards()) {
                 if (!card.getCardNumber().equals(cardNumber)) {
                     updatedCards.add(card);
                 } else {
-                    // If the card matches, mark it as deleted and add a transaction
                     cardDeleted = true;
                     user.addTransaction(TransactionFactory
                             .createTransaction(TransactionTag.CARD_DELETED,
@@ -66,7 +63,6 @@ public class DeleteCard implements BankCommand {
                 }
             }
 
-            // If a card was deleted, update the account's card list
             if (cardDeleted) {
                 account.setCards(updatedCards);
                 return;

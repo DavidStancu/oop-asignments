@@ -39,13 +39,10 @@ public class SetAlias implements BankCommand {
         String iban = command.getAccount();
         String alias = command.getAlias();
 
-        // Find the user by email
         for (User user : users) {
             if (user.getEmail().equals(email)) {
-                // Find the account by IBAN
                 for (Account account : user.getAccounts()) {
                     if (account.getIBAN().equals(iban)) {
-                        // Set the alias for the account
                         account.setAlias(alias);
                         return;
                     }

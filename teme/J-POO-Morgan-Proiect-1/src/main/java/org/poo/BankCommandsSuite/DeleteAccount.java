@@ -43,19 +43,16 @@ public class DeleteAccount implements BankCommand {
         String iban = commandInput.getAccount();
         int timestamp = commandInput.getTimestamp();
 
-        // Iterate through users to find the matching user and account
         for (User user : users) {
             if (user.getEmail().equals(email)) {
                 List<Account> accounts = user.getAccounts();
                 for (Account account : accounts) {
-                    // Check if the account matches the IBAN and has a balance of zero
                     if (account.getIBAN().equals(iban) && account.getBalance() == 0) {
                         accounts.remove(account);
                         outputBuilder.printDeleteAccountSuccess(timestamp);
                         return;
                     }
                 }
-                // If no matching account is found or balance is non-zero, print error
                 outputBuilder.printDeleteAccountError(timestamp);
                 return;
             }

@@ -59,16 +59,13 @@ public class PayOnline implements BankCommand {
         String commerciant = commandInput.getCommerciant();
         int timestamp = commandInput.getTimestamp();
 
-        // Iterate through the users to find the matching email
         for (User user : users) {
             if (user.getEmail().trim().equalsIgnoreCase(email.trim())) {
-                // Iterate through the accounts to find the matching card
                 for (Account account : user.getAccounts()) {
                     for (Card card : account.getCards()) {
                         if (card.getCardNumber().equals(cardNumber)) {
 
                             double convertedAmount = amount;
-                            // Check if the card is frozen
                             if (card.getStatus().equals("frozen")) {
                                 user.addTransaction(TransactionFactory
                                         .createTransaction(TransactionTag.CARD_STAT,
@@ -76,28 +73,25 @@ public class PayOnline implements BankCommand {
                                 return;
                             }
 
-                            // Convert the currency if necessary
                             if (!account.getCurrency().equalsIgnoreCase(currency)) {
                                 convertedAmount = BankTeller.convertCurrency(amount,
                                         currency, account.getCurrency());
                             }
 
-                            // Check if the account has sufficient balance
                             if (account.getBalance() >= convertedAmount) {
-                                account.setBalance(account.getBalance() - convertedAmount);
 
+                                account.setBalance(account.getBalance() - convertedAmount);
                                 user.addTransaction(TransactionFactory
                                         .createTransaction(ONLN_PAYMENT,
                                                 timestamp, description,
                                                 convertedAmount, commerciant));
 
-                                // Update the commerciant with the payment details
                                 Map<String, Commerciant> commerciants = BankTeller
                                         .getCommerciants();
-                                Commerciant currentComerciant = commerciants
+                                Commerciant currentCommerciant = commerciants
                                         .getOrDefault(commerciant, new Commerciant(commerciant));
-                                currentComerciant.addPayment(account.getIBAN(), convertedAmount);
-                                commerciants.put(commerciant, currentComerciant);
+                                currentCommerciant.addPayment(account.getIBAN(), convertedAmount);
+                                commerciants.put(commerciant, currentCommerciant);
                             } else {
                                 user.addTransaction(TransactionFactory
                                         .createTransaction(TransactionTag.NO_FUNDS,

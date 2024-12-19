@@ -62,29 +62,23 @@ public class SendMoney implements BankCommand {
         User receiverUser = null;
         Account receiverAccount = null;
 
-        // Find the receiver account based on the provided IBAN
         for (User user : users) {
-            if (!user.getEmail().equals(senderEmail)) {
                 receiverAccount = findAccountByIBANOrAlias(user, receiverIBAN);
                 if (receiverAccount != null) {
                     receiverUser = user;
                     break;
                 }
-            }
         }
 
-        // If the receiver account is not found, return
         if (receiverAccount == null) {
             return;
         }
 
-        // Ensure the sender and receiver accounts are valid
         if (!senderAccount.getIBAN().equals(senderIBAN)
                 || !receiverAccount.getIBAN().equals(receiverIBAN)) {
             return;
         }
 
-        // Check if the sender has enough balance
         if (senderAccount.getBalance() < amount) {
             senderUser.addTransaction(TransactionFactory
                     .createTransaction(TransactionTag.NO_FUNDS,
@@ -92,20 +86,20 @@ public class SendMoney implements BankCommand {
             return;
         }
 
-        // Handle currency conversion if sender and receiver have different currencies
         double convertedAmount = amount;
         if (!senderAccount.getCurrency()
                 .equalsIgnoreCase(receiverAccount.getCurrency())) {
             convertedAmount = BankTeller
                     .convertCurrency(amount, senderAccount.getCurrency(),
                             receiverAccount.getCurrency());
+            System.out.println(amount + " " + convertedAmount);
         }
 
-        // Update the balances of sender and receiver
+        System.out.println(receiverAccount.getBalance());
         senderAccount.setBalance(senderAccount.getBalance() - amount);
         receiverAccount.setBalance(receiverAccount.getBalance() + convertedAmount);
+        System.out.println(receiverAccount.getBalance() + " " + convertedAmount);
 
-        // Log the transaction for the sender
         senderUser.addTransaction(TransactionFactory
                 .createTransaction(
                         TransactionTag.TRANSFER, timestamp,
@@ -113,7 +107,6 @@ public class SendMoney implements BankCommand {
                         receiverAccount.getIBAN(), String.valueOf(amount),
                         "sent", senderAccount.getCurrency()));
 
-        // Log the transaction for the receiver
         receiverUser.addTransaction(TransactionFactory
                 .createTransaction(
                         TransactionTag.TRANSFER, timestamp,

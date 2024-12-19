@@ -8,9 +8,7 @@ import org.poo.TransactionsSuite.TransactionTag;
 import org.poo.User;
 import org.poo.fileio.CommandInput;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Command class responsible for processing a split payment across multiple accounts.
@@ -55,15 +53,10 @@ public class SplitPayment implements BankCommand {
         String currency = commandInput.getCurrency();
         int timestamp = commandInput.getTimestamp();
 
-        // Remove duplicate IBANs from the list
-        Set<String> uniqueIbanSet = new HashSet<>(accountIBANs);
-        accountIBANs.clear();
-        accountIBANs.addAll(uniqueIbanSet);
-
         int numberOfAccounts = accountIBANs.size();
         double splitAmount = totalAmount / numberOfAccounts;
 
-        // Check if all accounts have sufficient funds
+
         for (String iban : accountIBANs) {
             boolean accountFound = false;
             for (User user : users) {
@@ -75,7 +68,6 @@ public class SplitPayment implements BankCommand {
                                 currency, account.getCurrency());
                     }
 
-                    // If account balance is less than the amount to withdraw, return early
                     if (account.getBalance() < amountToWithdraw) {
                         return;
                     }
@@ -88,7 +80,6 @@ public class SplitPayment implements BankCommand {
             }
         }
 
-        // Deduct the split amount from each account and record the transaction
         for (String iban : accountIBANs) {
             for (User user : users) {
                 Account account = BankTeller.findAccountByIBANOrAlias(user, iban);
@@ -99,17 +90,10 @@ public class SplitPayment implements BankCommand {
                                 currency, account.getCurrency());
                     }
 
-                    // Update account balance
                     account.setBalance(account.getBalance() - amountToWithdraw);
 
-                    // Create and add a transaction for the split payment
-                    user.addTransaction(TransactionFactory.createTransaction(
-                            TransactionTag.SPLIT_PAY,
-                            timestamp,
-                            accountIBANs,
-                            totalAmount / numberOfAccounts,
-                            currency
-                    ));
+                    user.addTransaction(TransactionFactory.createTransaction(TransactionTag.SPLIT_PAY,
+                            timestamp, accountIBANs, totalAmount / numberOfAccounts, currency));
                 }
             }
         }

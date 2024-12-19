@@ -48,11 +48,18 @@ public class BankTeller {
             rate.setRate(rateInput.getRate());
             exchangeRates.add(rate);
 
+            System.out.println(rateInput.getRate() + " " + rateInput.getFrom()
+                    + " " + rateInput.getTo());
+
             ExchangeRates inverseRate = new ExchangeRates();
             inverseRate.setFrom(rateInput.getTo());
             inverseRate.setTo(rateInput.getFrom());
             inverseRate.setRate(1 / rateInput.getRate());
             exchangeRates.add(inverseRate);
+            System.out.println(inverseRate.getRate() + " " + inverseRate.getFrom()
+                    + " " + inverseRate.getTo());
+
+
         }
 
         for (CommandInput command : inputData.getCommands()) {
@@ -135,8 +142,11 @@ public class BankTeller {
     public static double convertCurrency(final double amount,
                                          final String fromCurrency,
                                          final String toCurrency) {
-        return convertCurrencyRecursive(amount, fromCurrency,
+        System.out.println(fromCurrency + " " + toCurrency + " " + amount);
+        double ans = convertCurrencyRecursive(amount, fromCurrency,
                 toCurrency, new ArrayList<>());
+        System.out.println("Rezultatul esteeeee " + ans);
+        return ans;
 
     }
 

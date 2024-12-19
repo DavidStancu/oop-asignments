@@ -295,7 +295,8 @@ public class OutputBuilder {
     private void printSplitPay(final int timestamp, final String description,
                                final List<String> involvedAccounts, final double amountPerAccount,
                                final String currency, final ArrayNode outputArray) {
-        ObjectNode splitPaymentNode = outputArray.addObject();
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode splitPaymentNode = objectMapper.createObjectNode();
         splitPaymentNode.put("timestamp", timestamp);
         splitPaymentNode.put("description", description);
         splitPaymentNode.put("currency", currency);

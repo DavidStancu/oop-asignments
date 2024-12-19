@@ -50,7 +50,6 @@ public class CheckCardStatus implements BankCommand {
 
         boolean cardFound = false;
 
-        // Iterate through users, their accounts, and the cards within those accounts
         for (User user : users) {
             for (Account account : user.getAccounts()) {
                 for (Card card : account.getCards()) {
@@ -62,7 +61,6 @@ public class CheckCardStatus implements BankCommand {
                         double minBalance = account.getMinBalance();
                         String description;
 
-                        // Check if the card is active and balance is below the minimum
                         if ("active".equals(status) && balance <= minBalance) {
                             description = "You have reached the minimum amount"
                                     + " of funds, the card will be frozen";
@@ -79,7 +77,6 @@ public class CheckCardStatus implements BankCommand {
             }
         }
 
-        // If the card was not found, print an error message
         if (!cardFound) {
             outputBuilder.printCheckCardStatusError(commandInput.getTimestamp());
         }

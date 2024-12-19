@@ -43,7 +43,6 @@ public class PrintTransactions implements BankCommand {
         int timestamp = commandInput.getTimestamp();
 
         User user = null;
-        // Search for the user by email
         for (User u : users) {
             if (u.getEmail().equals(email)) {
                 user = u;
@@ -51,18 +50,15 @@ public class PrintTransactions implements BankCommand {
             }
         }
 
-        // If user not found, return without doing anything
         if (user == null) {
             return;
         }
 
         List<Transaction> transactions = user.getTransactions();
-        // If the user has no transactions, return without doing anything
         if (transactions == null || transactions.isEmpty()) {
             return;
         }
 
-        // Print the transactions using the output builder
         outputBuilder.printTransactions(transactions, timestamp);
     }
 }

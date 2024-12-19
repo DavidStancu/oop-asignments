@@ -42,7 +42,6 @@ public class CreateCard implements BankCommand {
         String commandType = commandInput.getCommand();
         String cardType;
 
-        // Determine the card type based on the command type
         if ("createCard".equalsIgnoreCase(commandType)) {
             cardType = "CLASSIC";
         } else if ("createOneTimeCard".equalsIgnoreCase(commandType)) {
@@ -51,18 +50,13 @@ public class CreateCard implements BankCommand {
             return;
         }
 
-        // Iterate through users to find the matching user and account
         for (User user : users) {
             if (user.getEmail().equals(email)) {
                 for (Account account : user.getAccounts()) {
                     if (account.getIBAN().equals(accountIBAN)) {
-                        // Add the card to the account
                         account.addCard(cardType);
-
-                        // Get the newly created card's number
                         String cardNumber = account.getCards().getLast().getCardNumber();
 
-                        // Record the transaction of card creation
                         user.addTransaction(TransactionFactory
                                 .createTransaction(TransactionTag.CARD_CREATED,
                                         commandInput.getTimestamp(), account.getIBAN(),
