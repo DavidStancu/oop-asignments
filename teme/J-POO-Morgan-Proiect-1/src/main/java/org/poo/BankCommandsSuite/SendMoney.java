@@ -92,13 +92,10 @@ public class SendMoney implements BankCommand {
             convertedAmount = BankTeller
                     .convertCurrency(amount, senderAccount.getCurrency(),
                             receiverAccount.getCurrency());
-            System.out.println(amount + " " + convertedAmount);
         }
 
-        System.out.println(receiverAccount.getBalance());
         senderAccount.setBalance(senderAccount.getBalance() - amount);
         receiverAccount.setBalance(receiverAccount.getBalance() + convertedAmount);
-        System.out.println(receiverAccount.getBalance() + " " + convertedAmount);
 
         senderUser.addTransaction(TransactionFactory
                 .createTransaction(
